@@ -84,49 +84,7 @@ class BlogController extends Controller
             'message'=>'Blog deleted successfully'
         ],201);
     }
-//     public function trash()
-//     {
-
-//     $blogs = Blog::onlyTrashed()->get();
-
-//     return response()->json([
-//         'Trash' => $blogs
-//     ], 200);
-//     }
-
-//     public function restore($id)
-// {
-//     $user_id=Auth::user()->id;
-//     $blog=Blog::findOrFail($id);
-//     if($blog->user_id != $user_id)
-//         {
-//             return response()->json(['message'=>'Unauthorized'],403);
-//         }
-
-//     $blog->restore(); 
-
-//     return response()->json([
-//         'message' => 'Blog restored successfully',
-//         'Blog' => $blog
-//     ], 200);
-// }
-
-//     public function forceDelete($id)
-// {
-//     $user_id=Auth::user()->id;
-//     $blog=Blog::findOrFail($id);
-//     if($blog->user_id != $user_id)
-//         {
-//             return response()->json(['message'=>'Unauthorized'],403);
-//         }
-
-//     $blog->forceDelete(); 
-
-//     return response()->json([
-//         'message' => 'Blog permanently deleted'
-//     ], 200);
-// }
-
+    
     public function trash()
     {
         $blogs = Blog::onlyTrashed()->get();

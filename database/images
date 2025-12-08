@@ -1,0 +1,56 @@
+# مشروع Laravel Blog
+
+## 1️⃣ تشغيل المشروع
+
+1. استنساخ المشروع من GitHub:
+git clone https://github.com/hasan123dayoub-del/laravel-blog.git
+
+
+2. الدخول لمجلد المشروع:
+cd laravel-blog
+
+
+3. تثبيت الحزم:
+composer install
+
+
+4. نسخ ملف البيئة:
+cp .env.example .env
+
+
+5. تعديل ملف `.env` ليحتوي معلومات قاعدة البيانات:
+DB_DATABASE=laravel_blog
+DB_USERNAME=root
+DB_PASSWORD=
+
+
+6. إنشاء الجداول:
+php artisan migrate
+
+
+7. تشغيل المشروع:
+php artisan serve
+
+- افتح المتصفح على الرابط: `http://127.0.0.1:8000`
+
+---
+
+## 2️⃣ استعادة قاعدة البيانات (SQL Dump)
+
+- استخدم الملف `database_dump/LaravelBlog.sql`  
+- في phpMyAdmin: اختر قاعدة البيانات → Import → اختر الملف → اضغط Go
+
+---
+
+## 3️⃣ الصور التجريبية
+
+- الصور موجودة في المجلد: `database_dump/images/`  
+- يمكن استخدامها لتجربة عرض الواجهات.
+
+---
+
+## 4️⃣ ملاحظات هامة
+
+- **لا ترفع ملف `.env` على GitHub**  
+- بعد أي تعديل على قاعدة البيانات، اعمل SQL Dump جديد  
+- أي تغيير على الكود → اعمل **Commit + Push** على GitHub
