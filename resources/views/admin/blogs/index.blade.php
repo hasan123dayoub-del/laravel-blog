@@ -1,46 +1,58 @@
-@extends('layouts.app')
-@section('title', 'All Blogs')
+@extends('layout')
+@section('title','كل المقالات')
 
 @section('content')
-<h1>All Blogs</h1>
-<a href="{{ route('admin.blogs.create') }}" class="btn btn-primary mb-3">Add New Blog</a>
+<div class="card">
+  <div class="card-body">
+    <h4>كل المقالات</h4>
+    <a href="{{ route('admin.blogs.create') }}" class="btn btn-primary mb-3">إضافة مقال جديد</a>
+    <a href="{{ route('admin.blogs.trash') }}" class="btn btn-secondary mb-3">المحذوفات</a>
+    <a href="{{ route('frontend.favorites') }}" class="btn btn-success mb-3">مفضلاتي</a>
 
-<table class="table table-bordered">
-    <thead>
+    @if($blogs->count() > 0)
+    <table class="table table-bordered table-striped">
+      <thead>
         <tr>
-            <th>Title</th>
-            <th>Image</th>
-            <th>Categories</th>
-            <th>Actions</th>
+          <th>#</th>
+          <th>العنوان</th>
+          <th>المحتوى</th>
+          <th>الصورة</th>
+          <th>التصنيفات</th>
+          <th>الإجراءات</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         @foreach($blogs as $blog)
         <tr>
-            <td>{{ $blog->title }}</td>
-            <td>
-                @if($blog->image)
-                    <img src="{{ asset('storage/' . $blog->image) }}" width="100" height="70">
-                @endif
-            </td>
-            <td>
-                @foreach($blog->categories as $category)
-                    <span class="badge bg-info text-dark">{{ $category->name }}</span>
-                @endforeach
-            </td>
-            <td>
-                <a href="{{ route('admin.blogs.show', $blog->id) }}" class="btn btn-info btn-sm">Show</a>
-                <a href="{{ route('admin.blogs.edit', $blog->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                <form action="{{ route('admin.blogs.destroy', $blog->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger btn-sm">Delete</button>
-                </form>
-            </td>
+          <td>{{ $loop->iteration }}</td>
+          <td>{{ $blog->title }}</td>
+          <td>{{ Str::limit($blog->content,50) }}</td>
+          <td>
+            @if($blog->image)
+              <img src="{{ asset('storage/'.$blog->image) }}" width="100">
+            @else
+              <span class="text-muted">لا توجد صورة</span>
+            @endif
+          </td>
+          <td>
+            @foreach($blog->categories as $cat)
+              <span class="badge bg-secondary">{{ $cat->name }}</span>
+            @endforeach
+          </td>
+          <td>
+            <a href="{{ route('admin.blogs.edit', $blog) }}" class="btn btn-warning btn-sm">تعديل</a>
+            <form action="{{ route('admin.blogs.destroy', $blog) }}" method="POST" style="display:inline-block;">
+              @csrf @method('DELETE')
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('هل أنت متأكد؟')">حذف</button>
+            </form>
+          </td>
         </tr>
         @endforeach
-    </tbody>
-</table>
-
-<a href="{{ route('admin.blogs.trash') }}" class="btn btn-secondary mt-3">View Trash</a>
+      </tbody>
+    </table>
+    @else
+      <div class="alert alert-info">لا توجد مقالات حالياً.</div>
+    @endif
+  </div>
+</div>
 @endsection

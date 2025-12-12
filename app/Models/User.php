@@ -62,8 +62,10 @@ class User extends Authenticatable
             ->implode('');
     }
 
-    public function favorites()
-    {
-        return $this->belongsToMany(Blog::class,'favorites');
-    }
+   public function favorites()
+{
+    return $this->belongsToMany(Blog::class, 'favorites', 'user_id', 'blog_id')->withTimestamps();
+}
+
+
 }
