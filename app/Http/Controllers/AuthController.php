@@ -76,7 +76,7 @@ class AuthController extends Controller {
             'password'=>Hash::make($r->password)
         ]);
         Auth::login($user);
-        return redirect()->route('admin.blogs.index');
+        return $this->redirectAfterLogin($user);
     }
 
     public function login(Request $r){
@@ -84,11 +84,25 @@ class AuthController extends Controller {
             'email'=>'required|email',
             'password'=>'required'
         ]);
-        if (Auth::attempt($r->only('email','password'))) {
-            $r->session()->regenerate();
-            return redirect()->route('admin.blogs.index');
+        $user = User::where('email', $r->email)->first();
+        if (! $user || ! Hash::check($r->password, $user->password)) {
+            return back()->withErrors(['email'=>'بيانات الاعتماد خاطئة']);
         }
-        return back()->withErrors(['email'=>'بيانات الاعتماد خاطئة']);
+
+        // Users who turned on two-factor authentication must pass Fortify's challenge before they are logged in.
+        if ($user->two_factor_secret && $user->two_factor_confirmed_at) {
+            $r->session()->put(['login.id' => $user->getKey(), 'login.remember' => $r->boolean('remember')]);
+            return redirect()->route('two-factor.login');
+        }
+
+        Auth::login($user, $r->boolean('remember'));
+        $r->session()->regenerate();
+        return $this->redirectAfterLogin($user);
+    }
+
+    // Only admins may open the admin panel (CheckUser); everyone else goes to the blog.
+    private function redirectAfterLogin(User $user){
+        return redirect()->route($user->role === 'admin' ? 'admin.blogs.index' : 'frontend.index');
     }
 
     public function logout(Request $r){

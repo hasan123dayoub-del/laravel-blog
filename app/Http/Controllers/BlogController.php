@@ -249,12 +249,8 @@ class BlogController extends Controller {
                          ->with('error', 'لا يمكنك حذف هذا المقال');
     }
 
-  
-    if ($blog->image && Storage::disk('public')->exists('blogs/' . $blog->image)) {
-        Storage::disk('public')->delete('blogs/' . $blog->image);
-    }
-
-    $blog->categories()->detach();
+    // Soft delete: keep the image and categories so the post comes back complete if it is restored.
+    // They are removed in forceDelete().
     $blog->delete();
 
     return redirect()->route('admin.blogs.index')->with('success', 'تم حذف المقال بنجاح');
@@ -277,6 +273,7 @@ class BlogController extends Controller {
     public function forceDelete($id){
         $b = Blog::onlyTrashed()->findOrFail($id);
         if ($b->image) Storage::disk('public')->delete('blogs/'.$b->image);
+        $b->categories()->detach();
         $b->forceDelete();
         return back()->with('success','حذف نهائي');
     }

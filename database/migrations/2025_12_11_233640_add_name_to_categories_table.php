@@ -6,17 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
-{
-    Schema::table('categories', function (Blueprint $table) {
-        $table->string('name')->unique();
-    });
-}
+    /**
+     * create_categories_table already adds `name`, so on a fresh database this column
+     * exists and adding it again fails. Only add it to databases created before that.
+     */
+    public function up(): void
+    {
+        if (Schema::hasColumn('categories', 'name')) {
+            return;
+        }
 
-public function down()
-{
-    Schema::table('categories', function (Blueprint $table) {
-        $table->dropColumn('name');
-    });
-}
+        Schema::table('categories', function (Blueprint $table) {
+            $table->string('name')->unique();
+        });
+    }
+
+    public function down(): void
+    {
+        // `name` belongs to create_categories_table; dropping the table there removes it.
+    }
 };

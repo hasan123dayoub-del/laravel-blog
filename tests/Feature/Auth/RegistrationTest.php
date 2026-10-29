@@ -18,7 +18,7 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        $response = $this->post(route('register.store'), [
+        $response = $this->post(route('register'), [
             'name' => 'John Doe',
             'email' => 'test@example.com',
             'password' => 'password',
@@ -26,7 +26,7 @@ class RegistrationTest extends TestCase
         ]);
 
         $response->assertSessionHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(route('frontend.index'));
 
         $this->assertAuthenticated();
     }

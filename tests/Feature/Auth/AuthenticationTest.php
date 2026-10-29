@@ -22,23 +22,33 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->withoutTwoFactor()->create();
 
-        $response = $this->post(route('login.store'), [
+        $response = $this->post(route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('dashboard', absolute: false));
+            ->assertRedirect(route('frontend.index'));
 
         $this->assertAuthenticated();
+    }
+
+    public function test_admins_are_sent_to_the_admin_panel_after_login(): void
+    {
+        $admin = User::factory()->withoutTwoFactor()->create(['role' => 'admin']);
+
+        $this->post(route('login'), [
+            'email' => $admin->email,
+            'password' => 'password',
+        ])->assertRedirect(route('admin.blogs.index'));
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();
 
-        $response = $this->post(route('login.store'), [
+        $response = $this->post(route('login'), [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
@@ -61,7 +71,7 @@ class AuthenticationTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->post(route('login.store'), [
+        $response = $this->post(route('login'), [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -76,7 +86,7 @@ class AuthenticationTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('logout'));
 
-        $response->assertRedirect(route('home'));
+        $response->assertRedirect(route('login.form'));
 
         $this->assertGuest();
     }
