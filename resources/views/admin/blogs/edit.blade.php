@@ -22,7 +22,7 @@
       <div class="mb-3">
         <label class="form-label">الصورة الحالية</label><br>
         @if($blog->image)
-          <img src="{{ asset('storage/'.$blog->image) }}" width="180" class="mb-2">
+          <img src="{{ asset('storage/blogs/'.$blog->image) }}" width="180" class="mb-2">
         @else
           <div class="text-muted mb-2">لا توجد صورة</div>
         @endif

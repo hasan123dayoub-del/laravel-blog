@@ -10,7 +10,7 @@
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 @if($blog->image)
-                    <img src="{{ asset('storage/'.$blog->image) }}" class="card-img-top" style="height:180px; object-fit:cover;">
+                    <img src="{{ asset('storage/blogs/'.$blog->image) }}" class="card-img-top" style="height:180px; object-fit:cover;">
                 @endif
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ $blog->title }}</h5>

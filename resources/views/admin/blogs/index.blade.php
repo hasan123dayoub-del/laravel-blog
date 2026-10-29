@@ -29,7 +29,7 @@
           <td>{{ Str::limit($blog->content,50) }}</td>
           <td>
             @if($blog->image)
-              <img src="{{ asset('storage/'.$blog->image) }}" width="100">
+              <img src="{{ asset('storage/blogs/'.$blog->image) }}" width="100">
             @else
               <span class="text-muted">لا توجد صورة</span>
             @endif
